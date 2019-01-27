@@ -1,0 +1,19 @@
+Employee_compensation.csv data 
+
+filter out nan rows/columns
+compen
+Total-Compensation -> get overall budegt and plot which dept is highly payed
+TotalBenefit -> same as above
+OtheBenefit - > same as above
+healthbenefit -.same as above
+how much of health & other benefit is total benefit
+ratio between total salary to total benefit, total compensation
+
+job
+unique job title, and its popularity
+job title and job family type corelation
+job family code and job code
+
+depart is a subset of union, analyze what you can do and pot it out
+organization to union relationship
+

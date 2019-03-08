@@ -16,23 +16,23 @@ list_dict = [
         'source': 'UN',
         'url': 'https://scsanctions.un.org/al-qaida/',
         'fetch_type': 'xml',
-        'name': ['dataid', 'first_name', 'second_name', 'third_name', 'fourth_name', 'comments1'],
-        'alt_name': ['dataid', 'alias_name'],
-        'addr': ['dataid', 'street', 'city', 'country']
+        'name' : ['DATAID', 'FIRST_NAME', 'SECOND_NAME', 'THIRD_NAME', 'FOURTH_NAME', 'COMMENTS1'],
+        'alt_name' : ['DATAID', 'ALIAS_NAME'],
+        'addr' : ['DATAID', 'STREET', 'CITY', 'COUNTRY']
     },
-    {
-        'source': 'OFAC-NON-SDN',
-        'url': 'https://www.treasury.gov/ofac/downloads/consolidated/consall.zip',
-        'fetch_type': 'zip',
-        'name': 'cons_prim.csv',
-        'alt_name': 'cons_alt.csv',
-        'addr': 'cons_add.csv',
-        "cons_alt.csv": ['ent_num', 'alt_num', 'alt_type', 'alt_name', 'alt_remarks'],
-        "cons_add.csv": ['ent_num', 'add_num', 'address', 'city_state_zip', 'country', 'add_remarks'],
-        "cons_prim.csv": ['ent_num', 'sdn_name', 'sdn_type', 'program', 'title',
-                          'call_sign', 'vess_type', 'tonnage', 'grt', 'vess_flag', 'vess_owner', 'remarks']
-
-    }
+    # {
+    #     'source': 'OFAC-NON-SDN',
+    #     'url': 'https://www.treasury.gov/ofac/downloads/consolidated/consall.zip',
+    #     'fetch_type': 'zip',
+    #     'name': 'cons_prim.csv',
+    #     'alt_name': 'cons_alt.csv',
+    #     'addr': 'cons_add.csv',
+    #     "cons_alt.csv": ['ent_num', 'alt_num', 'alt_type', 'alt_name', 'alt_remarks'],
+    #     "cons_add.csv": ['ent_num', 'add_num', 'address', 'city_state_zip', 'country', 'add_remarks'],
+    #     "cons_prim.csv": ['ent_num', 'sdn_name', 'sdn_type', 'program', 'title',
+    #                       'call_sign', 'vess_type', 'tonnage', 'grt', 'vess_flag', 'vess_owner', 'remarks']
+    #
+    # }
 
 ]
 

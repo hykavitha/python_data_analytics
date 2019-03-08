@@ -1,0 +1,24 @@
+2019-03-09 02:09:35,624 ======Creating DB Handler using config.ini to read Db Settings ========
+2019-03-09 02:09:35,655 Error occured while readin the db settings from config.ini file and the error is __init__() missing 1 required positional argument: 'xml_data'
+2019-03-09 02:09:35,655 exiting the process.....
+2019-03-09 02:09:42,359 'Sanctions_ETL UN name'
+2019-03-09 02:09:42,359 'Sanctions_ETL UN name'	ref: sanctions_names
+2019-03-09 02:09:42,359  --before processing query list is: 0
+2019-03-09 02:09:42,395 ---get_xml_dataframe, getting individulas & entities for type: name
+2019-03-09 02:09:42,460 ---get_xml_dataframe, concatenated dataframe  for type name
+2019-03-09 02:09:42,695 Error occured while processing the data: 'NoneType' object has no attribute 'cursor'
+2019-03-09 02:09:42,695 totaltimetaken :0.41290099999999996
+2019-03-09 02:09:42,695 'Sanctions_ETL UN alt_name'
+2019-03-09 02:09:42,695 'Sanctions_ETL UN alt_name'	ref: sanctions_alternatenames
+2019-03-09 02:09:42,696  --before processing query list is: 0
+2019-03-09 02:09:42,716 ---get_xml_dataframe, getting individulas & entities for type: alt_name
+2019-03-09 02:09:42,743 ---get_xml_dataframe, concatenated dataframe  for type alt_name
+2019-03-09 02:09:42,806 Error occured while processing the data: 'NoneType' object has no attribute 'cursor'
+2019-03-09 02:09:42,806 totaltimetaken :0.5225759999999999
+2019-03-09 02:09:42,806 'Sanctions_ETL UN addr'
+2019-03-09 02:09:42,806 'Sanctions_ETL UN addr'	ref: sanctions_addresses
+2019-03-09 02:09:42,807  --before processing query list is: 0
+2019-03-09 02:09:42,825 ---get_xml_dataframe, getting individulas & entities for type: addr
+2019-03-09 02:09:42,853 ---get_xml_dataframe, concatenated dataframe  for type addr
+2019-03-09 02:09:42,874 Error occured while processing the data: 'address'
+2019-03-09 02:09:42,874 totaltimetaken :0.5897209999999999

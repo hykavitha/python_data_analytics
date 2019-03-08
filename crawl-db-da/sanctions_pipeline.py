@@ -37,7 +37,7 @@ sys.path.insert(0, util_path)
 import time
 from sanctions_dict import *
 from db_wrapper import *
-
+from xml_df import XML2DataFrame
 
 class Sanctions:
     """
@@ -49,13 +49,14 @@ class Sanctions:
 
     """ sources, url sources and whether it is xml sources or not"""
     """ to keep url fetched data so once fetched is available many times"""
-    response_data = ''
-    xml_response_data = ''
-    zipped = ''
-    db_connect = ''
-    xml2df = ''
+
 
     def __init__(self):
+        self.response_data = ''
+        self.xml_response_data = ''
+        self.zipped = ''
+        self.db_connect = ''
+        self.xml2df = ''
         pass
 
     """ Using db_wrapper.py  data"""
@@ -67,8 +68,8 @@ class Sanctions:
             self.db_connect = db_wrapper()
             print("after getting db:" )
             print(self.db_connect)
-            #self.xml2df = xml_dataframe()
-            #print(self.xml2df)
+            self.xml2df = XML2DataFrame()
+            print("Xxxxxxxxxxxxmmmmmmmmllllllll->>>>>>>>>" + self.xml2df)
 
             return True
         except Exception as err:
@@ -106,88 +107,67 @@ class Sanctions:
             message = 'Error occurred while inserting this record'
         return stat, message
 
-    # """ this function is used for sanction names upload on UN data alone, there is a problem in my xml_dataframe"""
+    # """ this function is used for sanction names upload
+    #  on UN data alone, there is a problem in my xml_dataframe"""
 
     def get_xml_dataframe(self, source_dict, type):
         # todo parse entities
         stat = False
         df = ''
+        print("get_xml_dataframe - type : " +type)
 
+
+        print("after printing xml response")
 
         try:
-            log.info("---get_xml_dataframe, parsing the xml for source: " + source_dict['source'] + " for type: " + type)
-            print("before getting xml_dataframe")
             print("---get_xml_dataframe, parsing the xml for source: " + source_dict['source'] + " for type: " + type)
-            #print (self.xml_response_data)
-            f = open('/Users/KaviAnu/Documents/python_data_analytics/consall/xml_data.txt', 'w')
-            f.write(self.xml_response_data)
-            exit(10)
-
-            self.xml2df.parse_xml(self.xml_response_data)
+            self.xml2df = XML2DataFrame(self.xml_response_data)
 
         except Exception as e:
-            f = open('/Users/KaviAnu/Documents/python_data_analytics/consall/xml_data.txt', 'w')
-            f.write(self.xml_response_data)
+
 
             print("Error occured in get_xml_dataframe, parsing the xml and error is %s" % (e))
-            exit(3)
+
             return stat, df
 
         log.info("---get_xml_dataframe, getting individulas & entities for type: " + type)
-
+        print(type)
+        print("--------type ---------")
         if type == 'name':
             for attribute in self.xml2df.root:
                 for indiv in attribute.iter('INDIVIDUALS'):
                     df = self.xml2df.process_data(indiv)
+
                 for entity in attribute.iter('ENTITIES'):
                     df2 = self.xml2df.process_data(entity)
 
             frames = [df, df2]
             df = pd.concat(frames)
+            print(df.head())
+            print("--------------name------")
             log.info("---get_xml_dataframe, concatenated dataframe  for type " + type)
 
             return stat, df
 
-        if type == 'alt_name':
-            results = dict()
-            tags = ['INDIVIDUAL', 'ENTITY']
-            frames = []
-            for tag in tags:
 
-                for indiv in self.xml2df.root.iter(tag):
-                    for i, alias in enumerate(indiv.findall(tag + '_ALIAS')):
-                        id = indiv.find('DATAID').text + '_' + str(i)
-                        results[id] = []
-                        for f in range(1, len(source_dict[type])):
-                            if alias.find(source_dict[type][f]) is None:
-                                results[id] = ''
-                            else:
-                                results[id] = str(alias.find(source_dict[type][f]).text).replace('\n', '')
-                    frames.append(pd.DataFrame(list(results.items()), columns=['DATAID', 'ALIAS_NAME']))
+        else:
+            frames = []
+            for attribute in self.xml2df.root:
+                for indiv in attribute.iter('INDIVIDUALS'):
+                    df = self.xml2df.process_data(indiv)
+                    df = df[source_dict[type]]
+                for entity in attribute.iter('ENTITIES'):
+                    df2 = self.xml2df.process_data(entity)
+                    df2 = df2[source_dict[type]]
+            frames = [df, df2]
+
             df = pd.concat(frames)
             log.info("---get_xml_dataframe, concatenated dataframe  for type " + type)
+            print(df.head())
+            print("--------------"+type+"------------")
+            return stat, df
 
-            if type == 'addr':
-                results = dict()
-                tags = ['INDIVIDUAL', 'ENTITY']
-                frames = []
-                for tag in tags:
 
-                    for indiv in self.xml2df.root.iter(tag):
-                        for i, alias in enumerate(indiv.findall(tag + 'ADDRESS')):
-                            id = indiv.find('DATAID').text + '_' + str(i)
-                            results[id] = []
-                            for f in range(1, len(source_dict[type])):
-                                if alias.find(source_dict[type][f]) is None:
-                                    pass
-                                else:
-                                    results[id] = str(alias.find(source_dict[type][f]).text).replace('\n', '')
-                        frames.append(pd.DataFrame(list(results.items()), columns=['DATAID', 'ALIAS_NAME']))
-
-                df = pd.concat(frames)
-                #log.info("---get_xml_dataframe, concatenated dataframe  for type " + type)
-
-        return stat, df
 
     def get_url(self, url):
         # get url, check errors and update
@@ -224,7 +204,8 @@ class Sanctions:
             print("xml url: " +source_dict['url'])
 
             stat, self.xml_response_data = self.get_url(source_dict['url'])
-
+            print("After fetching url :" )
+            #print(self.xml_response_data)
         else:
             if source_dict['fetch_type'] == 'zip':
                 stat, response_data = self.get_url(source_dict['url'])
@@ -388,10 +369,13 @@ class Sanctions:
             else:
                 return query_list
 
+
+
         if source_dict['fetch_type'] == 'xml':
 
             stat, df = self.get_xml_dataframe(source_dict, type)
             stat, df = self.process_df(df)
+
             if stat:
                 query_list = self.make_queries_xml(df, source_dict, type)
                 return query_list
@@ -416,7 +400,7 @@ class Sanctions:
         start_datetime = self.datetime_now()
 
         stat = self.db_hndlr()
-        #stat = True
+        stat = True
         if not stat:
             print("Error occured while connecting to the DB")
             log.critical("Error occured while connecting to the DB exiting sanctions")
@@ -442,7 +426,7 @@ class Sanctions:
                     try:
                         print("before going to process_data")
                         query_list = self.process_data(source_dict, type)
-                        #print(query_list)
+                        print(query_list)
                         print("after going to process_data")
                         print(len(query_list))
                         print("db_connect")
@@ -472,7 +456,6 @@ class Sanctions:
 
             else:
                 message = "Error occurred while fetching source : {} ".format(source_dict['source'])
-
                 log.critical("fetching data had some problem for this source, {} moving on to next soure".format(source_dict['source']))
                 continue
 
